@@ -169,6 +169,18 @@ Abre una terminal en la raiz del proyecto y entra al backend:
 cd backend
 ```
 
+Crea el archivo de variables de entorno. Dentro de la carpeta `backend/`, crea un archivo llamado `.env` con el siguiente contenido:
+
+```dotenv
+# Puerto del servidor (opcional)
+PORT=3000
+
+# Token para la API de DNI/RUC (apis.net.pe)
+APIS_NET_TOKEN=sk_14879.8xfue5QXag8fmaTRRT2qY2oBsLUl7Wa8
+```
+
+> El archivo `.env` no se sube al repositorio (esta en `.gitignore`), por eso debes crearlo manualmente en cada entorno local.
+
 Instala las dependencias:
 
 ```bash
@@ -237,7 +249,7 @@ http://localhost:3000
 
 ### Backend
 
-La conexion actual a MySQL esta definida en:
+La conexion a MySQL esta definida directamente en:
 
 ```text
 backend/src/modules/database/database.service.ts
@@ -252,13 +264,15 @@ password: '',
 database: 'facturacion_empresa',
 ```
 
-El puerto del backend puede definirse con la variable `PORT`. Si no se define, NestJS usa `3000`:
+Las variables de entorno del backend se configuran en el archivo `backend/.env`. Este archivo no esta en el repositorio, debes crearlo manualmente (ver seccion [Levantar el Backend](#levantar-el-backend)):
 
 ```dotenv
+# Puerto del servidor (opcional)
 PORT=3000
-```
 
-El proyecto incluye `ConfigModule`, por lo que en el futuro se puede mover la configuracion sensible a `backend/.env`.
+# Token para la API de DNI/RUC (apis.net.pe)
+APIS_NET_TOKEN=sk_14879.8xfue5QXag8fmaTRRT2qY2oBsLUl7Wa8
+```
 
 ### Frontend
 
