@@ -111,40 +111,51 @@ El proyecto necesita una base de datos llamada exactamente:
 facturacion_empresa
 ```
 
-### Opcion A: usando phpMyAdmin
+### Paso 1: Importar las tablas y datos
+
+#### Opcion A: phpMyAdmin
 
 1. Inicia MySQL desde XAMPP, Laragon o tu herramienta local.
 2. Abre phpMyAdmin, normalmente en `http://localhost/phpmyadmin`.
 3. Crea una base de datos nueva con el nombre `facturacion_empresa`.
-4. Selecciona la base de datos creada.
-5. Entra a la pestana **Importar**.
-6. Selecciona el archivo:
+4. Seleccionala y ve a la pestana **Importar**.
+5. Selecciona `backend/Base de datos.sql` y ejecuta.
 
-```text
-backend/Base de datos.sql
-```
-
-7. Ejecuta la importacion y espera a que phpMyAdmin cree las tablas, registros y procedimientos.
-
-### Opcion B: usando terminal MySQL
-
-Desde la raiz del proyecto:
-
-```bash
-mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS facturacion_empresa CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root -p facturacion_empresa < "backend/Base de datos.sql"
-```
-
-Si tu usuario `root` no tiene contrasena, puedes omitir `-p`:
+#### Opcion B: terminal MySQL
 
 ```bash
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS facturacion_empresa CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 mysql -u root facturacion_empresa < "backend/Base de datos.sql"
 ```
 
-### Verificacion Rapida
+### Paso 2: Importar los Stored Procedures (OBLIGATORIO)
 
-Al terminar la importacion, valida que existan tablas como:
+El archivo `Base de datos.sql` no incluye los stored procedures. Debes importarlos por separado ejecutando:
+
+```bash
+mysql -u root facturacion_empresa < "backend/stored_procedures.sql"
+```
+
+> **Si usas XAMPP** y `mysql` no esta en el PATH, usa la ruta completa:
+> ```bash
+> & "C:\xampp\mysql\bin\mysql.exe" -u root facturacion_empresa < "backend/stored_procedures.sql"
+> ```
+> En PowerShell usa `Get-Content` en lugar de `<`:
+> ```powershell
+> Get-Content "backend\stored_procedures.sql" | & "C:\xampp\mysql\bin\mysql.exe" -u root facturacion_empresa
+> ```
+
+### Verificacion
+
+Despues de ambos pasos, verifica que los procedimientos esten creados:
+
+```sql
+SHOW PROCEDURE STATUS WHERE Db = 'facturacion_empresa';
+```
+
+Deberias ver 22 procedimientos listados (sp_validar_login_empresa, sp_listar_perfiles, sp_login_perfil, etc.).
+
+Verifica tambien que existan las tablas principales:
 
 ```text
 detalle_empresa
@@ -158,8 +169,6 @@ proveedores
 medios_pago
 historial_backups
 ```
-
-El backend usa procedimientos almacenados, por lo que tambien deben importarse correctamente desde el mismo archivo SQL.
 
 ## Levantar el Backend
 
