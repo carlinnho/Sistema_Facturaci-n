@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --animate-gradient: gradient 3s ease infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
+
+  @keyframes gradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-150%) skewX(-15deg); }
+    100% { transform: translateX(250%) skewX(-15deg); }
+  }
+}

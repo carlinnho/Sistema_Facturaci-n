@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+/* En Tailwind v4, @import "tailwindcss" ya incluye el preflight por defecto,
+  PERO si tus inputs siguen rotos, forzamos la importación base para asegurar 
+  el reseteo global.
+*/
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    width: 100%;
+    background-color: #f3eae8; /* Fondo claro por defecto */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Aseguramos que los inputs no tengan fondo transparente por defecto */
+  input {
+    background-color: white;
+  }
+}
