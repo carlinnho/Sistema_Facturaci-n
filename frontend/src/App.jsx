@@ -8,6 +8,7 @@ import Configuracion from "./pages/Configuracion";
 import Proveedores from "./pages/Proveedores";
 import Reportes from "./pages/ReportesVenta";
 import Backup from "./pages/Backup";
+import Chatbot from "./pages/chatbot";
 
 // ── COMPONENTE GUARDIÁN DE RUTAS ──
 function RoleGuard({ allowedRoles, children }) {
@@ -49,6 +50,14 @@ function App() {
         <Route element={<DashboardLayout />}>
           {/* Ruta accesible para todos (Admin = 1, Trabajador = 2) */}
           <Route path="/home" element={<Home />} />
+          <Route
+            path="/chatbot"
+            element={
+              <RoleGuard allowedRoles={[1, 2]}>
+                <Chatbot />
+              </RoleGuard>
+            }
+          />
 
           {/* ── RUTAS RESTRINGIDAS (Solo Administrador) ── */}
           <Route
