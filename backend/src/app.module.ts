@@ -13,6 +13,7 @@ import { MediosPagoModule } from './modules/medios-pago/medios-pago.module';
 import { ProveedoresModule } from './modules/proveedores/proveedores.module';
 import { ReportesModule } from './modules/reportes/reportes.module';
 import { BackupModule } from './modules/backup/backup.module';
+import { ChatbotModule } from './modules/chatbot/chatbot.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { BackupModule } from './modules/backup/backup.module';
     ProveedoresModule,
     ReportesModule,
     BackupModule,
+    ChatbotModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -413,6 +413,58 @@ Algunas rutas requieren autenticacion JWT.
 - **Credenciales:** no subas contrasenas reales ni secretos de produccion al repositorio.
 - **Ramas:** crea una rama nueva para cada mejora o correccion antes de hacer commit.
 
+## Chatbot de Consultas (Fase 1)
+
+Disponible en `/chatbot` para administrador y trabajador. Consulta precios, stock
+y ayuda operativa. El administrador puede consultar bajo stock, productos agotados,
+contactos de proveedores, ingresos totales por ventas y rankings de productos mas
+y menos vendidos por unidades. Puedes combinar ingresos y rankings en una pregunta.
+Los listados muestran hasta cinco productos; al pedir el producto mas o menos
+vendido en singular, se muestra uno. Los menos vendidos incluyen productos activos
+con cero ventas en el periodo. Los empates se ordenan por SKU y nombre.
+Los periodos admitidos son hoy, esta semana (desde el lunes) y este mes, en hora
+de Lima. Las ventas consideran operaciones registradas en PEN, sin anuladas;
+el estado de emision SUNAT no se presenta como una validacion tributaria.
+
+En `backend/.env`, completa la clave sin publicarla en el repositorio:
+
+```dotenv
+OPENROUTER_API_KEY=tu_clave_de_openrouter
+OPENROUTER_MODEL=openrouter/free
+```
+
+Reinicia el backend despues de cambiar `.env`. `backend/.env.example` contiene
+los nombres de las variables sin secretos. La clave nunca se envia al frontend.
+La integracion usa la [API de chat de OpenRouter](https://openrouter.ai/docs/api/reference/overview).
+`openrouter/free` selecciona modelos gratuitos disponibles, sujetos a limites
+y disponibilidad; no hay cambio automatico a modelos de pago.
+
+Ejemplos: `Stock de leche`, `Precio de ARR-001`, `Productos con bajo stock`,
+`Cuanto vendimos hoy`, `Productos mas vendidos esta semana`,
+`Cuanto es el total de ingresos y el producto mas vendido en la semana`,
+`Listado de productos menos vendidos este mes`,
+`Telefono del proveedor Acme`, `Como imprimir un ticket`.
+Puedes escribir el nombre entre comillas si contiene palabras que coinciden con
+la pregunta. Las listas muestran hasta 20 resultados; si hay varios productos,
+el asistente pide precisar el SKU o el nombre completo.
+
+El endpoint `POST /chatbot/mensaje` recibe `{ "mensaje": "Stock de leche" }` y
+requiere el JWT del perfil. El backend interpreta un conjunto acotado de consultas
+mediante reglas, ejecuta SQL parametrizado de solo lectura y calcula los totales.
+OpenRouter recibe unicamente el resultado autorizado y redacta un resumen breve.
+Las tablas muestran datos directos del sistema, separados del resumen generado.
+Si falta la clave, hay un limite de uso o falla OpenRouter, los resultados siguen
+disponibles con un aviso; no se simula una respuesta de IA.
+
+Cada pregunta es independiente. El historial es temporal, se limpia al cambiar
+de perfil, salir de la pagina o iniciar una nueva conversacion. No se crean tablas
+ni se guardan conversaciones. No se realizan escrituras, pedidos, predicciones,
+importaciones Excel ni automatizaciones. Las preguntas fuera del alcance reciben
+orientacion para reformularlas. No se consulta una relacion producto-proveedor.
+
+Pruebas del modulo: desde `backend`, ejecuta `npm test -- --runInBand chatbot`.
+Las pruebas usan datos y respuestas del proveedor simulados, sin consumir la API.
+
 ## Soporte y Contacto
 
 Ante dudas, errores de instalacion o problemas durante pruebas locales, comunicarse con el responsable del proyecto.
